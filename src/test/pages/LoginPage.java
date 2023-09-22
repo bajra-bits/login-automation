@@ -36,60 +36,46 @@ public class LoginPage {
         logout.click();
     }
 
-    public void loginWithValidCreds() {
-        email.clear();
-        email.sendKeys(Utils.getEmail());
-        password.clear();
-        password.sendKeys(Utils.getPassword());
-        loginButton.click();
+    public void loginWithValidCreds(String email, String password) {
+        login(email, password);
     }
 
-    public String loginWithInvalidCreds() {
-        email.clear();
-        email.sendKeys(Utils.getInvalidEmail());
-        password.clear();
-        password.sendKeys(Utils.getInvalidPassword());
-        loginButton.click();
+    public String loginWithInvalidCreds(String email, String password) {
+        login(email, password);
         errorList = driver.findElements(By.xpath("//*[@data-test='error']"));
         return getErrorMessage();
     }
 
-    public String loginWithBlankPass() {
-        email.clear();
-        email.sendKeys(Utils.getInvalidEmail());
-        password.sendKeys("");
-        loginButton.click();
+    public String loginWithBlankPass(String email, String password) {
+        login(email, password);
         errorList = driver.findElements(By.xpath("//*[@data-test='error']"));
         return getErrorMessage();
     }
 
-    public String loginWithBlankEmail() {
-        email.sendKeys("");
-        password.clear();
-        password.sendKeys(Utils.getInvalidPassword());
-        loginButton.click();
+    public String loginWithBlankEmail(String email, String password) {
+        login(email, password);
         errorList = driver.findElements(By.xpath("//*[@data-test='error']"));
         return getErrorMessage();
     }
 
-    public String loginWithInvalidEmail() {
-        email.clear();
-        email.sendKeys(Utils.getInvalidEmail());
-        password.clear();
-        password.sendKeys(Utils.getPassword());
-        loginButton.click();
+    public String loginWithInvalidEmail(String email, String password) {
+        login(email, password);
         errorList = driver.findElements(By.xpath("//*[@data-test='error']"));
         return getErrorMessage();
     }
 
-    public String loginWithInvalidPass() {
-        email.clear();
-        email.sendKeys(Utils.getEmail());
-        password.clear();
-        password.sendKeys(Utils.getInvalidPassword());
-        loginButton.click();
+    public String loginWithInvalidPass(String email, String password) {
+        login(email, password);
         errorList = driver.findElements(By.xpath("//*[@data-test='error']"));
         return getErrorMessage();
+    }
+
+    public void login(String email, String password) {
+        this.email.clear();
+        this.email.sendKeys(email);
+        this.password.clear();
+        this.password.sendKeys(password);
+        loginButton.click();
     }
 
     public String getErrorMessage() {
