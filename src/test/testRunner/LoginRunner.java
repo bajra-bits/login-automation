@@ -27,7 +27,7 @@ public class LoginRunner {
     }
 
     public void getProductList() {
-        LoginDTO response  = loginPage.login(Utils.getEmail(), Utils.getPassword());
+        LoginDTO response  = loginPage.login(Utils.getEmail(), Utils.getInvalidPassword());
         if(response.status){
             dashboardPage.listProducts();
         } else {

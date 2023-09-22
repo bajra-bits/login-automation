@@ -54,7 +54,8 @@ public class LoginPage {
                resp.element = brand;
                resp.status = true;
            }
-        } catch(NoSuchElementException e) {
+        }catch(TimeoutException e) {
+            System.out.println("Timeout exception");
             WebElement error = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@data-test='error']")));
             resp.element = error;
             resp.status = false;
