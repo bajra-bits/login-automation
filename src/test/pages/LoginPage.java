@@ -1,15 +1,21 @@
 package test.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import test.driver.SeleniumDriver;
+import test.dto.LoginDTO;
 import test.utils.Utils;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.NoSuchElementException;
+
+
 
 public class LoginPage {
     private WebDriver driver;
@@ -17,6 +23,7 @@ public class LoginPage {
     private WebElement password;
     private WebElement loginButton;
     private List<WebElement> errorList;
+    private final String brandText = "Swag Labs";
     private Wait<WebDriver> wait = new WebDriverWait(SeleniumDriver.getInstance(), Duration.ofSeconds(2));
 
     public LoginPage(WebDriver driver) {
@@ -26,56 +33,33 @@ public class LoginPage {
         loginButton = driver.findElement(By.id("login-button"));
     }
 
-    public void logout() {
+    public void logout() throws NoSuchElementException {
        WebElement hamburgerIcon = driver.findElement(By.id("react-burger-menu-btn"));
-       WebElement logout =  driver.findElement(By.xpath("//*[@id='logout_sidebar_link']"));
-       hamburgerIcon.click();
 
         /* explicit wait for sidebar to appear*/
-        wait.until(d -> logout.isDisplayed());
+        WebElement logout = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='logout_sidebar_link']")));
         logout.click();
     }
 
-    public void loginWithValidCreds(String email, String password) {
-        login(email, password);
-    }
-
-    public String loginWithInvalidCreds(String email, String password) {
-        login(email, password);
-        errorList = driver.findElements(By.xpath("//*[@data-test='error']"));
-        return getErrorMessage();
-    }
-
-    public String loginWithBlankPass(String email, String password) {
-        login(email, password);
-        errorList = driver.findElements(By.xpath("//*[@data-test='error']"));
-        return getErrorMessage();
-    }
-
-    public String loginWithBlankEmail(String email, String password) {
-        login(email, password);
-        errorList = driver.findElements(By.xpath("//*[@data-test='error']"));
-        return getErrorMessage();
-    }
-
-    public String loginWithInvalidEmail(String email, String password) {
-        login(email, password);
-        errorList = driver.findElements(By.xpath("//*[@data-test='error']"));
-        return getErrorMessage();
-    }
-
-    public String loginWithInvalidPass(String email, String password) {
-        login(email, password);
-        errorList = driver.findElements(By.xpath("//*[@data-test='error']"));
-        return getErrorMessage();
-    }
-
-    public void login(String email, String password) {
+    public LoginDTO login(String email, String password) throws NoSuchElementException {
+        LoginDTO resp = new LoginDTO(); // Initialize the LoginDTO object;
         this.email.clear();
         this.email.sendKeys(email);
         this.password.clear();
         this.password.sendKeys(password);
         loginButton.click();
+        try{
+           WebElement brand =  wait.until(ExpectedConditions.presenceOfElementLocated(By.className("app_logo")));
+           if(brand.getText().equals(brandText)) {
+               resp.element = brand;
+               resp.status = true;
+           }
+        } catch(NoSuchElementException e) {
+            WebElement error = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@data-test='error']")));
+            resp.element = error;
+            resp.status = false;
+        }
+        return resp;
     }
 
     public String getErrorMessage() {
