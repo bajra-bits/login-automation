@@ -1,10 +1,7 @@
 package test.testRunner;
 
-import org.junit.Assert;
-import org.junit.Test;
+
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import test.driver.SeleniumDriver;
 import test.dto.LoginDTO;
 import test.pages.DashboardPage;
@@ -33,6 +30,8 @@ public class LoginRunner {
         LoginDTO response  = loginPage.login(Utils.getEmail(), Utils.getPassword());
         if(response.status){
             dashboardPage.listProducts();
+        } else {
+            System.out.println("Invalid credintials. Login Failed!");
         }
     }
 

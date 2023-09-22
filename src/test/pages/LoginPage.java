@@ -59,7 +59,9 @@ public class LoginPage {
             resp.element = error;
             resp.status = false;
         }
-        return resp;
+        finally {
+            return resp;
+        }
     }
 
     public String getErrorMessage() {
