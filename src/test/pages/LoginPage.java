@@ -11,6 +11,7 @@ import test.driver.SeleniumDriver;
 import test.dto.LoginDTO;
 import test.utils.Utils;
 
+import java.sql.Time;
 import java.time.Duration;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -33,12 +34,17 @@ public class LoginPage {
         loginButton = driver.findElement(By.id("login-button"));
     }
 
-    public void logout() throws NoSuchElementException {
-       WebElement hamburgerIcon = driver.findElement(By.id("react-burger-menu-btn"));
+    public void logout() throws TimeoutException {
+        try{
+            WebElement hamburgerIcon = driver.findElement(By.id("react-burger-menu-btn"));
+            hamburgerIcon.click();
 
-        /* explicit wait for sidebar to appear*/
-        WebElement logout = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='logout_sidebar_link']")));
-        logout.click();
+            /* explicit wait for sidebar to appear */
+            WebElement logout = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='logout_sidebar_link']")));
+            logout.click();
+        }catch(TimeoutException e){
+            e.printStackTrace();
+        }
     }
 
     public LoginDTO login(String email, String password) throws NoSuchElementException {
@@ -55,7 +61,6 @@ public class LoginPage {
                resp.status = true;
            }
         }catch(TimeoutException e) {
-            System.out.println("Timeout exception");
             WebElement error = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@data-test='error']")));
             resp.element = error;
             resp.status = false;

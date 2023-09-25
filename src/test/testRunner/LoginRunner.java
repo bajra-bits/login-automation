@@ -27,38 +27,72 @@ public class LoginRunner {
     }
 
     public void getProductList() {
-        LoginDTO response  = loginPage.login(Utils.getEmail(), Utils.getInvalidPassword());
-        if(response.status){
+        LoginDTO response = loginPage.login(Utils.getEmail(), Utils.getPassword());
+        if (response.status) {
             dashboardPage.listProducts();
         } else {
             System.out.println("Invalid credintials. Login Failed!");
         }
     }
 
-    public static void main(String[] args) throws Exception{
+    public void login(String email, String password, String message) {
+        StringBuilder errMessage = new StringBuilder("");
+        LoginDTO response = loginPage.login(email, password);
+        if (!response.status) {
+            errMessage.append("**Error " + response.element.getText() + " ");
+            errMessage.append(message.compareTo(response.element.getText()) == 0 ? "Pass" : "Failed");
+            errMessage.append(" **");
+        }
+        System.out.println(errMessage);
+    }
+
+    public void login(String email, String password) {
+        LoginDTO response = loginPage.login(email, password);
+        if (response.status) {
+            System.out.println("Login successful");
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
         LoginRunner runner = new LoginRunner();
         try {
+            /* invalid login*/
+//            runner.login(Utils.getEmail(), Utils.getInvalidPassword(), runner.invalidCreds);
+//            runner.login(Utils.getInvalidEmail(), Utils.getPassword(), runner.invalidCreds);
+//            runner.login(Utils.getInvalidEmail(), Utils.getInvalidPassword(), runner.invalidCreds);
+//            runner.login("", "", runner.emailEmpty);
+//            runner.login(Utils.getEmail(), "", runner.passwordEmpty);
+//            runner.login("", Utils.getPassword(), runner.emailEmpty);
+
+            /* login locked user*/
+            runner.login(Utils.getLockedUser(), Utils.getPassword(), runner.lockedUser);
+            runner.login(Utils.getLockedUser(), Utils.getInvalidPassword(), runner.invalidCreds);
+
+            /* valid login */
+//            runner.login(Utils.getEmail(), Utils.getPassword());
+//            runner.loginPage.logout();
+
             /* Print product lines */
-            runner.getProductList();
+//            runner.getProductList();
 
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Something went wrong!");
-        }finally {
-            SeleniumDriver.getInstance().close();
+        } finally {
+//            SeleniumDriver.getInstance().close();
         }
     }
 }
 
 
 /*
-* verify login with valid credentials
-* verify login with password blank
-* verify login with username blank
-* verify login with valid username invalid password
-* verify login with invalid uesrname valid password
-* verify login with invalid credentails
-* verify login with locked user
-* verify login with locked user invalid password
-* */
+ * verify login with valid credentials
+ * verify login with password blank
+ * verify login with username blank
+ * verify login with valid username invalid password
+ * verify login with invalid uesrname valid password
+ * verify login with invalid credentails
+ * verify login with locked user
+ * verify login with locked user invalid password
+ * */
